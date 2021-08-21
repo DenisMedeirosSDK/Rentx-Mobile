@@ -1,17 +1,15 @@
 import React from "react";
+import { StatusBar } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
-import { Acessory } from "../../components/Acessory";
+import { Accessory } from "../../components/Accessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
 import { Button } from "../../components/Button";
 
-import speedSvg from "../../assets/speed.svg";
-import accelerationSvg from "../../assets/acceleration.svg";
-import forceSvg from "../../assets/force.svg";
-import gasolineSvg from "../../assets/gasoline.svg";
-import exchangeSvg from "../../assets/exchange.svg";
-import peopleSvg from "../../assets/people.svg";
+import { CarDTO } from "../../dtos/CarDTO";
+import { getAccessoryIcon } from "../../utils/getAccessoryIcon";
 
 import {
   CarImages,
@@ -26,10 +24,9 @@ import {
   Period,
   Price,
   About,
-  Acessories,
+  Accessories,
   Footer,
 } from "./styles";
-import { useNavigation } from "@react-navigation/native";
 
 type RootStackParamList = {
   Scheduling: undefined;
@@ -40,8 +37,14 @@ type ScreenNavigationProp = StackNavigationProp<
   "Scheduling"
 >;
 
+interface Params {
+  car: CarDTO;
+}
+
 export function CarDetails() {
   const nanigation = useNavigation<ScreenNavigationProp>();
+  const route = useRoute();
+  const { car } = route.params as Params;
 
   function handleConfirmRental() {
     nanigation.navigate("Scheduling");
@@ -53,40 +56,38 @@ export function CarDetails() {
 
   return (
     <Container>
+      <StatusBar
+        barStyle="dark-content"
+        translucent
+        backgroundColor="transparent"
+      />
       <Header>
         <BackButton onPress={GoBack} />
       </Header>
       <CarImages>
-        <ImageSlider
-          imagesUrl={[
-            "https://www.motortrend.com/uploads/sites/10/2018/05/2018-audi-rs5-4wd-coupe-angular-front.png",
-          ]}
-        />
+        <ImageSlider imagesUrl={car.photos} />
       </CarImages>
       <Content>
         <Details>
           <Description>
-            <Brand>Lamborghini</Brand>
-            <Name>Huracan</Name>
+            <Brand>{car.brand}</Brand>
+            <Name>{car.name}</Name>
           </Description>
           <Rent>
-            <Period>Ao dia</Period>
-            <Price>R$ 500</Price>
+            <Period>{car.rent.period}</Period>
+            <Price>R$ {car.rent.price}</Price>
           </Rent>
         </Details>
-        <Acessories>
-          <Acessory name="380KM/h" icon={speedSvg} />
-          <Acessory name="3.2s" icon={accelerationSvg} />
-          <Acessory name="800 HP" icon={forceSvg} />
-          <Acessory name="Gasolina" icon={gasolineSvg} />
-          <Acessory name="Auto" icon={exchangeSvg} />
-          <Acessory name="2 pessoas" icon={peopleSvg} />
-        </Acessories>
-        <About>
-          Este é automóvel desportivo. Surgiu do lendário touro de lide
-          indultado na praça Real Maestranza de Sevilla. É um belíssimo carro
-          para quem gosta de acelerar.
-        </About>
+        <Accessories>
+          {car.accessories.map((accesory) => (
+            <Accessory
+              key={accesory.type}
+              name={accesory.name}
+              icon={getAccessoryIcon(accesory.type)}
+            />
+          ))}
+        </Accessories>
+        <About>{car.about}</About>
       </Content>
       <Footer>
         <Button
