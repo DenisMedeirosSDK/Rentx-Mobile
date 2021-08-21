@@ -1,7 +1,13 @@
 import React from "react";
 import { StatusBar } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+
 import { useTheme } from "styled-components/native";
+
 import { BackButton } from "../../components/BackButton";
+import { Button } from "../../components/Button";
+import { Calendar } from "../../components/Calendar";
 
 import ArrowSvg from "../../assets/arrow.svg";
 
@@ -16,11 +22,29 @@ import {
   Content,
   Footer,
 } from "./styles";
-import { Button } from "../../components/Button";
-import { Calendar } from "../../components/Calendar";
+
+type RootStackParamList = {
+  SchedulingDetails: undefined;
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "SchedulingDetails"
+>;
 
 export function Scheduling() {
   const theme = useTheme();
+
+  const nanigation = useNavigation<ScreenNavigationProp>();
+
+  function handleConfirmRental() {
+    nanigation.navigate("SchedulingDetails");
+  }
+
+  function GoBack() {
+    nanigation.goBack();
+  }
+
   return (
     <Container>
       <StatusBar
@@ -29,7 +53,7 @@ export function Scheduling() {
         backgroundColor="transparent"
       />
       <Header>
-        <BackButton onPress={() => {}} color={theme.colors.shape} />
+        <BackButton onPress={GoBack} color={theme.colors.shape} />
         <Title>
           Escolha uma {"\n"} data de inicio e {"\n"} fim do aluguel
         </Title>
@@ -53,7 +77,7 @@ export function Scheduling() {
         <Calendar />
       </Content>
       <Footer>
-        <Button title="Confirmar" />
+        <Button title="Confirmar" onPress={handleConfirmRental} />
       </Footer>
     </Container>
   );

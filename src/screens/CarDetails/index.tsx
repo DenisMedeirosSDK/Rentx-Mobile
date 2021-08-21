@@ -1,9 +1,10 @@
 import React from "react";
-import { useTheme } from "styled-components/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 import { Acessory } from "../../components/Acessory";
 import { BackButton } from "../../components/BackButton";
 import { ImageSlider } from "../../components/ImageSlider";
+import { Button } from "../../components/Button";
 
 import speedSvg from "../../assets/speed.svg";
 import accelerationSvg from "../../assets/acceleration.svg";
@@ -28,14 +29,32 @@ import {
   Acessories,
   Footer,
 } from "./styles";
-import { Button } from "../../components/Button";
+import { useNavigation } from "@react-navigation/native";
+
+type RootStackParamList = {
+  Scheduling: undefined;
+};
+
+type ScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Scheduling"
+>;
 
 export function CarDetails() {
-  const theme = useTheme();
+  const nanigation = useNavigation<ScreenNavigationProp>();
+
+  function handleConfirmRental() {
+    nanigation.navigate("Scheduling");
+  }
+
+  function GoBack() {
+    nanigation.goBack();
+  }
+
   return (
     <Container>
       <Header>
-        <BackButton onPress={() => {}} />
+        <BackButton onPress={GoBack} />
       </Header>
       <CarImages>
         <ImageSlider
@@ -70,7 +89,10 @@ export function CarDetails() {
         </About>
       </Content>
       <Footer>
-        <Button title="Confirmar" />
+        <Button
+          title="Escolher período do aluguel"
+          onPress={handleConfirmRental}
+        />
       </Footer>
     </Container>
   );
