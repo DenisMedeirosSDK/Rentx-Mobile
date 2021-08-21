@@ -47,7 +47,7 @@ export function CarDetails() {
   const { car } = route.params as Params;
 
   function handleConfirmRental() {
-    nanigation.navigate("Scheduling");
+    nanigation.navigate("Scheduling", { car });
   }
 
   function GoBack() {
