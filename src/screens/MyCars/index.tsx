@@ -10,7 +10,7 @@ import { api } from "../../services/api";
 
 import { BackButton } from "../../components/BackButton";
 import { Car } from "../../components/Car";
-import { Load } from "../../components/Load";
+import { LoadAnimation } from "../../components/LoadAnimation";
 
 import {
   Container,
@@ -74,7 +74,7 @@ export function MyCars() {
       </Header>
 
       {loading ? (
-        <Load />
+        <LoadAnimation />
       ) : (
         <Content>
           <Appointments>
@@ -84,7 +84,7 @@ export function MyCars() {
 
           <FlatList
             data={cars}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => String(item.id)}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <CarWrapper>
